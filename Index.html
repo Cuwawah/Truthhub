@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truthub Fact Checker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 sm:p-8">
+
+    <div class="max-w-4xl w-full mx-auto space-y-8">
+        
+        <!-- Header Section -->
+        <header class="text-center space-y-2">
+            <h1 class="text-5xl font-bold text-blue-600">TRUTHUB</h1>
+            <p class="text-gray-600 text-lg sm:text-xl max-w-2xl mx-auto">
+                Get instant, reliable fact-checking on any claim. Our AI assistant helps you verify information and combat misinformation.
+            </p>
+        </header>
+
+        <!-- Feature Cards Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Instant Analysis Card -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg text-center space-y-4 flex flex-col items-center">
+                <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="font-semibold text-xl">Instant Analysis</h3>
+                <p class="text-gray-500">Get immediate fact-checking results on any claim or statement.</p>
+            </div>
+            <!-- Reliable Sources Card -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg text-center space-y-4 flex flex-col items-center">
+                <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="font-semibold text-xl">Reliable Sources</h3>
+                <p class="text-gray-500">Information verified against trusted, authoritative sources.</p>
+            </div>
+            <!-- Clear Verdicts Card -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg text-center space-y-4 flex flex-col items-center">
+                <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="font-semibold text-xl">Clear Verdicts</h3>
+                <p class="text-gray-500">Easy-to-understand results with color-coded verification status.</p>
+            </div>
+        </div>
+
+        <!-- Fact Check Assistant Section -->
+        <div class="bg-white p-6 rounded-2xl shadow-lg space-y-4">
+            <h2 class="text-2xl font-bold">Fact Check Assistant</h2>
+            <p class="text-gray-600">Ask me to verify any claim or statement</p>
+            
+            <!-- Chat Window -->
+            <div id="chat-window" class="h-96 overflow-y-auto p-4 bg-gray-50 rounded-xl space-y-4">
+                <!-- Initial welcome message -->
+                <div class="flex justify-start">
+                    <div class="bg-gray-200 text-gray-800 p-3 rounded-t-xl rounded-br-xl max-w-[80%]">
+                        <p class="font-medium">Hi! I'm your fact-checking assistant. Ask me about any claim you'd like me to verify.</p>
+                        <span class="text-xs text-gray-500 mt-2 block">13:21:16</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input Section -->
+            <div class="space-y-2">
+                <div class="flex items-center space-x-2">
+                    <input
+                        id="chat-input"
+                        type="text"
+                        placeholder="Type your claim here to fact-check"
+                        class="flex-1 p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <button
+                        id="send-button"
+                        class="p-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+                    >
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="text-gray-500 text-sm">
+                    Try asking about: <span class="font-medium">vaccines, climate change, 5G, Mars canals, MSG, knuckle cracking, or Great Wall visibility</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Get DOM elements
+        const chatWindow = document.getElementById('chat-window');
+        const chatInput = document.getElementById('chat-input');
+        const sendButton = document.getElementById('send-button');
+
+        // Hard-coded claims and verdicts
+        const hardcodedFacts = [
+            {
+                claim: "Vaccines cause autism.",
+                verdict: "This claim is FALSE. Extensive scientific research has shown no link between vaccines and autism.",
+                status: 'unverified'
+            },
+            {
+                claim: "Climate change is a hoax.",
+                verdict: "This claim is FALSE. The scientific consensus is that the Earth's climate is warming, primarily due to human activities.",
+                status: 'unverified'
+            },
+            {
+                claim: "5G causes COVID-19.",
+                verdict: "This claim is FALSE. 5G is a radio wave technology and cannot transmit viruses.",
+                status: 'unverified'
+            },
+            {
+                claim: "Knuckle cracking causes arthritis.",
+                verdict: "This claim is FALSE. Research has shown no significant connection between knuckle cracking and the development of arthritis.",
+                status: 'unverified'
+            },
+            {
+                claim: "The Great Wall of China is visible from space.",
+                verdict: "This claim is FALSE. It is not visible from low Earth orbit with the naked eye.",
+                status: 'unverified'
+            },
+            {
+                claim: "MSG is bad for you.",
+                verdict: "This claim is FALSE. The FDA has classified MSG as a food ingredient that is generally recognized as safe.",
+                status: 'unverified'
+            },
+            {
+                claim: "The Earth is round.",
+                verdict: "This claim is VERIFIED. The Earth is an oblate spheroid, which is a round sphere slightly flattened at the poles.",
+                status: 'verified'
+            }
+        ];
+
+        // Helper function for API calls with backoff
+        const fetchWithBackoff = async (apiUrl, options, retries = 5, delay = 1000) => {
+            try {
+                const response = await fetch(apiUrl, options);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                if (retries > 0) {
+                    console.error(`Fetch failed, retrying in ${delay}ms...`, error);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return fetchWithBackoff(apiUrl, options, retries - 1, delay * 2);
+                } else {
+                    throw error;
+                }
+            }
+        };
+
+        // Function to create and append a message to the chat window
+        const appendMessage = (text, isUser = false, status = null) => {
+            const messageContainer = document.createElement('div');
+            messageContainer.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
+
+            const messageBubble = document.createElement('div');
+            let bubbleClasses = 'p-3 rounded-xl max-w-[80%]';
+
+            if (isUser) {
+                bubbleClasses += ' bg-blue-600 text-white rounded-tr-none';
+            } else {
+                bubbleClasses += ' bg-gray-200 text-gray-800 rounded-tl-none';
+            }
+            messageBubble.className = bubbleClasses;
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'flex items-center space-x-2';
+
+            if (!isUser && status) {
+                const icon = document.createElement('i');
+                if (status === 'verified') {
+                    icon.className = 'fas fa-circle-check text-green-500';
+                } else if (status === 'unverified') {
+                    icon.className = 'fas fa-circle-xmark text-red-500';
+                }
+                messageContent.appendChild(icon);
+            }
+
+            const messageText = document.createElement('p');
+            messageText.innerHTML = text;
+            messageText.className = 'font-medium';
+            messageContent.appendChild(messageText);
+
+            messageBubble.appendChild(messageContent);
+
+            const timestamp = document.createElement('span');
+            timestamp.textContent = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            timestamp.className = `text-xs mt-2 block ${isUser ? 'text-blue-200' : 'text-gray-500'}`;
+            messageBubble.appendChild(timestamp);
+
+            messageContainer.appendChild(messageBubble);
+            chatWindow.appendChild(messageContainer);
+            chatWindow.scrollTop = chatWindow.scrollHeight; // Auto-scroll to the bottom
+        };
+
+        // Function to handle the fact-checking process
+        const factCheck = async () => {
+            const userClaim = chatInput.value.trim();
+            if (userClaim === '') return;
+
+            // Display user's message
+            appendMessage(userClaim, true);
+            chatInput.value = '';
+
+            // Check if the claim matches a hard-coded fact
+            const hardcodedResult = hardcodedFacts.find(fact => fact.claim.toLowerCase() === userClaim.toLowerCase());
+
+            if (hardcodedResult) {
+                // If a hard-coded fact is found, display the verdict immediately
+                appendMessage(hardcodedResult.verdict, false, hardcodedResult.status);
+            } else {
+                // Display loading indicator
+                const loadingMessage = document.createElement('div');
+                loadingMessage.id = 'loading-indicator';
+                loadingMessage.className = 'flex justify-start';
+                loadingMessage.innerHTML = `
+                    <div class="bg-gray-200 text-gray-800 p-3 rounded-xl max-w-[80%]">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-4 h-4 border-2 border-t-2 border-blue-500 rounded-full animate-spin"></div>
+                            <span>Fact-checking...</span>
+                        </div>
+                    </div>
+                `;
+                chatWindow.appendChild(loadingMessage);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+
+                try {
+                    // Prepare API request
+                    const chatHistory = [{ role: 'user', parts: [{ text: `Fact-check the following claim and provide a concise, clear verdict: "${userClaim}". Start your response with either "VERIFIED" or "UNVERIFIED" and nothing else, followed by your explanation.` }] }];
+                    const payload = { contents: chatHistory };
+                    const apiKey = ''; // Auto-provided in this environment
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                    // Fetch data
+                    const result = await fetchWithBackoff(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    const aiResponse = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                    // Remove loading indicator
+                    document.getElementById('loading-indicator').remove();
+
+                    if (aiResponse) {
+                        let status = null;
+                        let text = aiResponse;
+                        if (aiResponse.startsWith('VERIFIED')) {
+                            status = 'verified';
+                            text = aiResponse.replace('VERIFIED', '').trim();
+                        } else if (aiResponse.startsWith('UNVERIFIED')) {
+                            status = 'unverified';
+                            text = aiResponse.replace('UNVERIFIED', '').trim();
+                        }
+                        appendMessage(text, false, status);
+                    } else {
+                        appendMessage("Sorry, I couldn't verify that claim. Please try another one.", false);
+                    }
+                } catch (error) {
+                    console.error("Error during fact-checking:", error);
+                    document.getElementById('loading-indicator').remove();
+                    appendMessage("An error occurred. Please try again.", false);
+                }
+            }
+        };
+
+        // Event listeners
+        sendButton.addEventListener('click', factCheck);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                factCheck();
+            }
+        });
+    </script>
+
+</body>
+</html>
