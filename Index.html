@@ -237,7 +237,7 @@
                     // Prepare API request
                     const chatHistory = [{ role: 'user', parts: [{ text: `Fact-check the following claim and provide a concise, clear verdict: "${userClaim}". Start your response with either "VERIFIED" or "UNVERIFIED" and nothing else, followed by your explanation.` }] }];
                     const payload = { contents: chatHistory };
-                    const apiKey = ''; // Auto-provided in this environment
+                    const apiKey = 'AIzaSyBztiS7Mem0kGP6Zk5HjI0_ElCfBuBvUB4'; 
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
                     // Fetch data
